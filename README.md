@@ -1,5 +1,6 @@
 # Cracking the Code Interview Solutions
-## 1.1 Find unique characters
+*This file contains JavaScript solutions to Cracking The Coding Interview (6th Edition)* 
+### 1.1 Find unique characters
 #### Solution 1 (Using str.sort())
 ```
 function hasUniqueChars(str){
@@ -63,7 +64,7 @@ function hasUniqueChars(str){
 ```
 const hasUniqueChars = (str) => new Set(str).size === str.length;
 ```
-## 1.2 Check if string is permutation
+### 1.2 Check if string is permutation
 ```
 const isPermutation = (str1, str2) => {
  const arr1 = str1.toLowerCase().split('').sort();
@@ -73,7 +74,7 @@ const isPermutation = (str1, str2) => {
 ```
  
 
-## 1.3 URLify (Replace spaces with ‘%20’)
+### 1.3 URLify (Replace spaces with ‘%20’)
 #### Solution 1 (Split string into array and filter out white spaces to then join)
 ```
 const URLify = (str, n) => {
