@@ -245,3 +245,187 @@ const oneAway = (str1, str2) => {
   return edits === 1
 }
 ```
+### 1.6 String Compression (iterate through each character and keep track of count)
+```
+const strCompress2 = (str) => {
+  const letters = str.split('')
+  let currLetter = letters[0]
+  let count = 0
+  let compressedStr = ''
+
+  for(let i = 0; i < letters.length; i++) {
+    // console.log(letters[i])
+    if (currLetter === letters[i]) {
+      count++ 
+      if (i === letters.length - 1) {
+        compressedStr+=`${currLetter}${count}`
+      }
+    }
+    else {
+      compressedStr+=`${currLetter}${count}`
+      currLetter = letters[i]
+      count = 1
+    }
+  }
+  compressedStr+=`${currLetter}${count}`
+
+  return compressedStr.length > str.length ? str : compressedStr
+}
+```
+#### Variation that includes an initial check to see if string is already compressed. Less efficient version due to nested loop
+```
+const stringCompression = (str) => {
+  // Checking to see if string is already 'compressed'
+  // aka no repeating characters
+  // If so return original string
+  const uniqueCheck = Array.from(new Set(str)).sort()
+  const chars = str.split("")
+  const sortedChars = ([...chars]).sort()
+  if (uniqueCheck.toString() === sortedChars.toString()) {
+    return str
+  }
+  // If there are repeating characters
+  // Do the algorithm
+  let compressed = ""
+  let collection = 0
+  let currIndex = 0;
+  let j;
+  for (i = 0; i < chars.length; i++) {
+    let currentChar = chars[currIndex]
+    j = currIndex;
+    while (chars[j] && chars[j] === chars[currIndex]) {
+      console.log(chars[j])
+      collection++
+      j++
+    }
+    compressed += `${currentChar}${collection}`
+    collection = 0;
+    currIndex = j
+    if (!chars[j]){
+      return compressed
+    }
+  }
+  return compressed
+}
+```
+### 1.7 Rotate n X n Matrix
+#### Not in place (using deep copy)
+```
+const rotateMatrix = (matrix) => {
+  let currRow = 0;
+  let changingCol = matrix[0].length - 1
+  // Deep copy the matrix to reference it
+  // Not sure if this is "in place"?
+  const copy = JSON.parse(JSON.stringify(matrix));
+  for (let i = 0; i < matrix.length; i++){
+    for (let j = 0; j < copy[i].length; j++) {
+        matrix[currRow][changingCol] = copy[i][j]
+        currRow++
+        if (matrix[currRow]=== undefined){
+          currRow = 0;
+          break
+        }
+      }  
+    changingCol--
+    }  
+  return matrix
+}
+
+// for length of row move to the next col, if i > length, move down
+```
+#### In place 
+```
+const rotateInPlace = (matrix) => {
+  const length = matrix.length
+
+  for (layer = 0; layer < Math.floor(length / 2); layer++) {
+    const first = layer;
+    const last = length - 1 - layer
+
+    for (let i = first; i < last; i++) {
+      const offset = i - first;
+      const top = 
+        matrix[first][i] // saves top
+
+      // left -> top
+      matrix[first][i] = 
+        matrix[last - offset][first]
+
+      // bottom -> left
+      matrix[last - offset][first] = 
+        matrix[last][last - offset]
+
+      // right -> bottom
+      matrix[last][last - offset] = 
+        matrix[i][last]
+
+      // top -> right
+      matrix[i][last] = 
+        top // right <- saved top
+    }
+  }
+  return matrix
+}
+
+```
+### 1.8 Zero Matrix (Check to see if row includes matrix, set that row to zero, and add that index to a zero index array, another loop to set whole column to zero)
+#### Solution 1
+```
+const zeroMatrix = (matrix) => {
+  const zeroRow = new Array(matrix[0].length)
+  zeroRow.fill(0)
+
+  numRows = matrix.length;
+  let zeroColIndex;
+  let zeroColIndices = []
+
+  for(row = 0; row < numRows; row++) {
+    if (matrix[row].includes(0)) {
+      zeroColIndex = matrix[row].indexOf(0)
+      zeroColIndices.push(zeroColIndex)
+      matrix[row] = zeroRow
+    }
+  }
+  matrix.forEach(m => {
+    zeroColIndices.forEach(c => {
+      m[c] = 0
+    })
+  })
+  return matrix
+}
+```
+#### Solution 2 (create new array, triple nested loop to check for and fill with 0s)
+```
+const zeroMatrix = (matrix, m, n) => { 
+  // m=rows, n=cols
+  // create new array to return
+  let newMatrix = new Array(m)
+  for (let i = 0; i < m; i++) {
+    newMatrix[i] = new Array(n)
+  }
+
+  for (let r = 0; r < m; r++) {
+    for (let c = 0; c < n; c++) {
+      if (matrix[r][c] === 0) {
+        // fill row
+        newMatrix[r].fill(0)
+        // fill col
+        for (let i = 0; i < m; i++) {
+          newMatrix[i][c] = 0;
+        }
+
+      }
+    }
+  }
+
+  // fill remaining nonzero values
+  for (let i = 0; i < m; i++) {
+    for (let j = 0; j < n; j++) {
+      if (newMatrix[i][j] !== 0) {
+        newMatrix[i][j] = matrix[i][j]
+      }
+    }
+  }
+  return newMatrix
+}
+```
