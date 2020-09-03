@@ -429,3 +429,178 @@ const zeroMatrix = (matrix, m, n) => {
   return newMatrix
 }
 ```
+## 1.9 String Rotation
+
+``` 
+const strRotation = (s1, s2) => {
+  const s1Arr = s1.split('')
+  const s2Arr = s2.split('')
+
+  if (s1Arr.length !== s2Arr.length) {
+    return false
+  }
+  
+  let possibleStartingIndex = -1
+  let indexFound = false
+  let doneSearching = false
+
+  for(let i = 0; i < s1Arr.length; i++) {
+    console.log('s1:', i, s1Arr[i])
+    for (let j = 0; j < s2Arr.length; j++) {
+      if (s1Arr[i] === s2Arr[j]) {
+        if (!indexFound) {
+          possibleStartingIndex = j
+          indexFound = true
+        }
+
+        console.log('s2:', j, s2Arr[j])
+
+        if (j === s2Arr.length - 1) {
+          doneSearching = true
+        }
+      }
+    }
+
+    console.log()
+
+    if (doneSearching) {
+      console.log('checking', s2Arr.slice(0, possibleStartingIndex).join(''))
+
+      return isSubstring(s2Arr.slice(0, possibleStartingIndex).join(''), s1)
+    }
+  }
+}
+
+const isSubstring = (strToCheck, biggerStr) => {
+  return biggerStr.includes(strToCheck)
+}
+
+console.log(strRotation("hello", "lohel"))
+```
+
+
+# Linked Lists
+
+## Implementing A Node
+```
+class _Node {
+    constructor(value, next) {
+        this.value = value;
+        this.next = next;
+    }
+}
+```
+## Implementing A Linked List
+```
+class LinkedList {
+    constructor() {
+      this.head = null
+    }
+   insertFirst(item) {
+        this.head = new _Node(item, this.head)
+    }
+    insertLast(item) {
+        if (this.head === null) {
+            this.insertFirst(item)
+        }
+        else {
+            let tempNode = this.head;
+            while (tempNode.next !== null) {
+                tempNode = tempNode.next
+            }
+            tempNode.next = new _Node(item, null)
+        }
+    }
+ }
+```
+
+## 1.1 Remove Dups: Write code to remove duplicates from an unsorted linked list.
+
+```
+const removeDupes = (list) => {
+  const duplicates = [];
+  let prev = null;
+  let curr = list.head
+  while(curr != null) {
+    if (!duplicates.includes(curr.value)) {
+      duplicates.push(curr.value)
+      prev = curr
+      curr = curr.next
+    }
+    else {
+      console.log(`Removing ${curr.value}`)
+      prev.next = curr.next;
+      curr = curr.next
+    }
+  }
+}
+```
+## 1.2 Kth To Last: Remove k<sup>th</sup> to last node from singly linked list
+```
+const kthToLast = (list, k) => {
+  const values = [];
+  let curr = list.head;
+  while(curr != null) {
+    values.push(curr);
+    curr = curr.next;
+  }
+  return (values.length - k) < 0 ? -1 : values[values.length - k];
+}
+```
+## 1.3 Delete Middle Node: Delete node from middle (any except first or last node)
+#### Solution 1
+```
+const deleteMiddleNode = (list, nodeValue) => {
+  if (list.head.value === nodeValue) {
+    console.log("first")
+    return list;
+  }
+  let curr = list.head;
+  let prev = null;
+  while (curr.value != nodeValue && curr != null) {
+    console.log(curr.value)
+    prev = curr
+    curr = curr.next;
+    if (curr.next === null){
+      console.log("last")
+      return list;
+    }
+  }
+  if (curr === null) {
+    return list;
+  }
+  prev.next = curr.next;
+  curr = curr.next;
+  return list;
+}
+```
+#### Solution 2
+```
+const delMidNode = (list, n) => {
+
+  let prev = null
+  let curr =  list.head
+
+  if (curr.value === n) {
+    return list
+  }
+
+  while (curr !== null) {
+    if (curr.next === null) {
+      if (curr.value === n) {
+        return list
+      }
+    }
+
+    if (curr.value === n) {
+      prev.next = curr.next
+      curr = prev.next
+    }
+
+    prev = curr
+    curr = curr.next    
+  }
+
+  return list
+}
+```
